@@ -113,4 +113,60 @@ public class Cart {
             e.printStackTrace();
         }
     }
+
+    public static int editCart(int id, int quantity, String customerName, int limitOfPurchase) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        Statement statement = null;
+        try {
+            Class.forName(JDBC_DRIVER);
+            connection = DriverManager.getConnection(DB_URL, USER, PASS);
+
+            if (isContainingTheId(id, customerName)) {
+
+                String updateSql = "update " + customerName + " set quantity=quantity+? where id=?";
+                preparedStatement = connection.prepareStatement(updateSql);
+                preparedStatement.setInt(1, quantity);
+                preparedStatement.setInt(2, id);
+                preparedStatement.executeUpdate();
+                preparedStatement.close();
+                connection.close();
+
+            } else {
+                //getting info from storeroom=====================================
+                statement = connection.createStatement();
+                String sql = "select category,name,UniquePrice from storeroom where id=" + id;
+                ResultSet rs = statement.executeQuery(sql);
+                String category = "";
+                String name = "";
+                double UniquePrice = 0.0;
+                while (rs.next()) {
+                    category = rs.getString("category");
+                    name = rs.getString("name");
+                    UniquePrice = rs.getDouble("UniquePrice");
+                }
+                double price = quantity * UniquePrice;
+                //======================================================================================
+                String updateSql = "insert into " + customerName + "(id,category,name,quantity,UniquePrice,Price)" +
+                        " values (?,'" + category + "','" + name + "',?,?,?)";
+                preparedStatement = connection.prepareStatement(updateSql);
+                preparedStatement.setInt(1, id);
+                preparedStatement.setInt(2, quantity);
+                preparedStatement.setDouble(3, UniquePrice);
+                preparedStatement.setDouble(4, price);
+                preparedStatement.executeUpdate();
+                limitOfPurchase++;
+                rs.close();
+                statement.close();
+                preparedStatement.close();
+                connection.close();
+            }
+
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return limitOfPurchase;
+    }
 }
