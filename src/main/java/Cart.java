@@ -169,4 +169,48 @@ public class Cart {
         }
         return limitOfPurchase;
     }
+
+    public static void deleteItem(String customerName, int id) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        Statement statement = null;
+        try {
+            Class.forName(JDBC_DRIVER);
+            connection = DriverManager.getConnection(DB_URL, USER, PASS);
+            statement = connection.createStatement();
+            String recordQuantity = "select quantity from " + customerName + " where id=" + id;
+            ResultSet rs = statement.executeQuery(recordQuantity);
+
+            int updateQty = 0;
+            while (rs.next()) {
+                updateQty = rs.getInt("quantity");
+            }
+
+            String updateSql = "update storeroom set quantity=(quantity+?) where id = ?";
+
+            preparedStatement = connection.prepareStatement(updateSql);
+            preparedStatement.setInt(1, updateQty);
+            preparedStatement.setInt(2, id);
+            preparedStatement.executeUpdate();
+
+
+            String sql = "delete from " + customerName + " where id=" + id;
+            statement.executeUpdate(sql);
+//            String sql = "delete from ? where id=?";
+//            preparedStatement = connection.prepareStatement(sql);
+//            preparedStatement.setString(1, customerName);
+//            preparedStatement.setInt(2, id);
+//            System.out.println(sql);
+
+//            preparedStatement.executeUpdate();
+
+
+            preparedStatement.close();
+            statement.close();
+            connection.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
