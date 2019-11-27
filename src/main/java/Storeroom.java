@@ -35,4 +35,26 @@ public class Storeroom {
 
         }
     }
+
+    public static void add(int id, String category, String name, int quantity, double price) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            Class.forName(JDBC_DRIVER);
+            connection = DriverManager.getConnection(DB_URL, USER, PASS);
+            String sql = "insert into storeroom values(?,?,?,?,?)";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, id);
+            preparedStatement.setString(2, category);
+            preparedStatement.setString(3, name);
+            preparedStatement.setInt(4, quantity);
+            preparedStatement.setDouble(5, price);
+            preparedStatement.executeUpdate();
+
+            preparedStatement.close();
+            connection.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
