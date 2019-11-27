@@ -57,4 +57,38 @@ public class Storeroom {
             e.printStackTrace();
         }
     }
+
+    public static void editStoreroom(int id, int quantity) {
+        Connection connection = null;
+        //Statement statement = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            Class.forName(JDBC_DRIVER);
+            connection = DriverManager.getConnection(DB_URL, USER, PASS);
+
+            String getQTY = "select quantity from storeroom where id=?";
+            preparedStatement = connection.prepareStatement(getQTY);
+            preparedStatement.setInt(1, id);
+            ResultSet rs = preparedStatement.executeQuery();
+
+            int firstQuantity = 0;
+            while (rs.next()) {
+                firstQuantity = rs.getInt("quantity");
+            }
+            int updateQuantity = firstQuantity - quantity;
+            String updateSql = "update storeroom set quantity = ? where id = ?";
+            preparedStatement = connection.prepareStatement(updateSql);
+            preparedStatement.setInt(1, updateQuantity);
+            preparedStatement.setInt(2, id);
+            preparedStatement.executeUpdate();
+
+            preparedStatement.close();
+            connection.close();
+
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
