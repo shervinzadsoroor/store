@@ -60,4 +60,27 @@ public class Cart {
         }
 
     }
+
+    public static boolean isContainingTheId(int Id, String customerName) {
+        Connection connection = null;
+        Statement statement = null;
+        boolean isContaining = false;
+        try {
+            Class.forName(JDBC_DRIVER);
+            connection = DriverManager.getConnection(DB_URL, USER, PASS);
+            statement = connection.createStatement();
+            String sql = "select id from " + customerName;
+            ResultSet rs = statement.executeQuery(sql);
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                if (id == Id) {
+                    isContaining = true;
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return isContaining;
+    }
 }
