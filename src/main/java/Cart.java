@@ -38,4 +38,26 @@ public class Cart {
 
         }
     }
+
+    public static void createCart(String customerName) {
+        Connection connection = null;
+        Statement statement = null;
+        // PreparedStatement preparedStatement = null;
+
+        try {
+            Class.forName(JDBC_DRIVER);
+            connection = DriverManager.getConnection(DB_URL, USER, PASS);
+            statement = connection.createStatement();
+            String createCart = "create table " + customerName + " (id int,category varchar(30),name varchar(30),quantity int,UniquePrice double,Price double)";
+            statement.executeUpdate(createCart);
+            statement.close();
+            connection.close();
+
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
 }
