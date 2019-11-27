@@ -6,7 +6,7 @@ public class StoreroomDAO {
             Scanner inputStr = new Scanner(System.in);
             Scanner inputInt = new Scanner(System.in);
             while (true) {
-                //Storeroom.add(14, "Radio", "sony", 45, 35.99);
+
                 Storeroom.showStoreroom();
                 int limitOfPurchase = 0;
                 String customerName;

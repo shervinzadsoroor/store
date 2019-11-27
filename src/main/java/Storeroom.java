@@ -2,7 +2,7 @@ import java.sql.*;
 
 public class Storeroom {
     static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
-    static final String DB_URL = "jdbc:mysql://localhost/store";
+    static final String DB_URL = "jdbc:mysql://localhost/onlineStore";
 
     static final String USER = "root";
     static final String PASS = "";
