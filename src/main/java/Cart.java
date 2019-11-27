@@ -83,4 +83,34 @@ public class Cart {
         }
         return isContaining;
     }
+
+    public static void findById(int Id, String customerName) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        try {
+
+            Class.forName(JDBC_DRIVER);
+            connection = DriverManager.getConnection(DB_URL, USER, PASS);
+            String sql = "select * from " + customerName + " where id=?";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, Id);
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String category = rs.getString("category");
+                String name = rs.getString("name");
+                int quantity = rs.getInt("quantity");
+                double price = rs.getInt("price");
+                System.out.printf("id : %d\tcategory : %s\tname : %s\tquantity : %d\tprice : %.2f\n"
+                        , id, category, name, quantity, price);
+            }
+
+            rs.close();
+            preparedStatement.close();
+            connection.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
